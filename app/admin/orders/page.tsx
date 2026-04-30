@@ -1,34 +1,59 @@
 import { createClient } from "@/lib/supabase/server";
-import { formatDate, formatPrice } from "@/lib/utils";
+import { AdminCrud } from "@/components/admin/admin-crud";
+import Link from "next/link";
 
 export default async function AdminOrders() {
   const supabase = await createClient();
-  const { data } = await supabase.from("orders").select("*").order("created_at", { ascending: false }).limit(100);
-  type Row = { id: string; created_at: string; customer_name: string | null; total: number; status: string };
-  const rows = (data as Row[]) ?? [];
+  const { data } = await supabase
+    .from("orders")
+    .select("*")
+    .order("created_at", { ascending: false })
+    .limit(500);
+  const rows = (data ?? []).map((o) => ({
+    ...o,
+    short_id: String(o.id).slice(0, 8),
+  }));
   return (
     <div className="space-y-4">
-      <h1 className="font-display text-3xl font-bold">הזמנות</h1>
-      <div className="bg-white rounded-2xl shadow-sm border border-rose-100 overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="bg-rose-50">
-            <tr className="text-right">
-              <th className="p-3">#</th><th className="p-3">תאריך</th><th className="p-3">לקוחה</th><th className="p-3">סכום</th><th className="p-3">סטטוס</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r) => (
-              <tr key={r.id} className="border-t hover:bg-rose-50/40">
-                <td className="p-3 font-mono text-xs">{r.id.slice(0, 8)}</td>
-                <td className="p-3">{formatDate(r.created_at)}</td>
-                <td className="p-3">{r.customer_name}</td>
-                <td className="p-3 font-semibold">{formatPrice(Number(r.total))}</td>
-                <td className="p-3"><span className="px-2 py-1 bg-rose-100 text-rose-700 rounded-full text-xs">{r.status}</span></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="flex items-center justify-between">
+        <h1 className="font-display text-3xl font-bold">הזמנות</h1>
+        <Link
+          href="/admin/orders/items"
+          className="text-sm text-rose-700 hover:underline"
+        />
       </div>
+      <AdminCrud
+        table="orders"
+        rows={rows}
+        fields={[
+          { name: "customer_name", label: "שם לקוחה" },
+          { name: "customer_email", label: "אימייל" },
+          { name: "customer_phone", label: "טלפון" },
+          { name: "total", label: "סכום", type: "number", required: true },
+          {
+            name: "status",
+            label: "סטטוס",
+            type: "select",
+            required: true,
+            options: [
+              { value: "pending", label: "ממתין" },
+              { value: "paid", label: "שולם" },
+              { value: "shipped", label: "נשלח" },
+              { value: "delivered", label: "נמסר" },
+              { value: "cancelled", label: "בוטל" },
+              { value: "refunded", label: "הוחזר" },
+            ],
+          },
+        ]}
+        searchableFields={["short_id", "customer_name", "customer_email", "status"]}
+        displayFields={[
+          { name: "short_id", label: "#" },
+          { name: "created_at", label: "תאריך", type: "date" },
+          { name: "customer_name", label: "לקוחה" },
+          { name: "total", label: "סכום", type: "currency" },
+          { name: "status", label: "סטטוס" },
+        ]}
+      />
     </div>
   );
 }

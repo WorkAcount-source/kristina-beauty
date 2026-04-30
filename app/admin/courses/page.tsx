@@ -12,14 +12,21 @@ export default async function AdminCourses() {
         rows={data ?? []}
         fields={[
           { name: "title", label: "כותרת", required: true },
-          { name: "duration_min", label: "משך (דקות)", type: "number", required: true },
+          { name: "duration_min", label: "משך (דקות)", type: "number", required: true, step: 1 },
           { name: "price", label: "מחיר", type: "number", required: true },
-          { name: "image_url", label: "תמונה (URL)" },
+          { name: "image_url", label: "תמונה", type: "image" },
+          { name: "video_url", label: "קישור לסרטון", type: "url", hint: "YouTube / Vimeo / Mux / Cloudinary URL" },
           { name: "description", label: "תיאור קצר", type: "textarea" },
           { name: "content", label: "תוכן הקורס", type: "textarea" },
           { name: "active", label: "פעיל", type: "boolean" },
         ]}
-        displayFields={[{ name: "title", label: "כותרת" }, { name: "duration_min", label: "דקות" }, { name: "price", label: "מחיר" }]}
+        displayFields={[
+          { name: "image_url", label: "", type: "image" },
+          { name: "title", label: "כותרת" },
+          { name: "duration_min", label: "דקות" },
+          { name: "price", label: "מחיר", type: "currency" },
+          { name: "active", label: "סטטוס", type: "boolean" },
+        ]}
       />
     </div>
   );

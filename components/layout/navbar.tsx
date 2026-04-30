@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Menu, X, ShoppingBag, Sparkles, LogIn, LogOut, UserPlus, UserCircle2 } from "lucide-react";
+import { Menu, X, ShoppingBag, Sparkles, LogIn, LogOut, UserPlus, UserCircle2, LayoutDashboard } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCart, useCartHydrated } from "@/lib/store/cart";
 import { createClient } from "@/lib/supabase/client";
@@ -25,6 +25,7 @@ export function Navbar() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const cartHydrated = useCartHydrated();
   const itemCount = useCart((s) => s.items.reduce((a, b) => a + b.qty, 0));
 
@@ -53,9 +54,20 @@ export function Navbar() {
   useEffect(() => {
     const supabase = createClient();
     let mounted = true;
-    supabase.auth.getUser().then(({ data }) => { if (mounted) setUser(data.user); });
+    const loadRole = async (uid: string | undefined) => {
+      if (!uid) { if (mounted) setIsAdmin(false); return; }
+      const { data } = await supabase.from("profiles").select("role").eq("id", uid).maybeSingle();
+      if (mounted) setIsAdmin(data?.role === "admin");
+    };
+    supabase.auth.getUser().then(({ data }) => {
+      if (!mounted) return;
+      setUser(data.user);
+      loadRole(data.user?.id);
+    });
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
-      if (mounted) setUser(session?.user ?? null);
+      if (!mounted) return;
+      setUser(session?.user ?? null);
+      loadRole(session?.user?.id);
     });
     return () => { mounted = false; sub.subscription.unsubscribe(); };
   }, []);
@@ -169,6 +181,25 @@ export function Navbar() {
             {/* Auth area — icon-only buttons. Labels are provided via aria-label/title for a11y. */}
             {user ? (
               <>
+                {isAdmin && (() => {
+                  const isAdminPage = pathname?.startsWith("/admin");
+                  return (
+                    <Link
+                      href="/admin"
+                      aria-label="ניהול האתר"
+                      title="ניהול האתר"
+                      aria-current={isAdminPage ? "page" : undefined}
+                      className={cn(
+                        "p-2.5 rounded-full transition-colors",
+                        isAdminPage
+                          ? (solid ? "bg-rose-100 text-rose-700" : "bg-white/25 text-white")
+                          : (solid ? "text-neutral-700 hover:bg-rose-50 hover:text-rose-700" : "text-white/95 hover:bg-white/15")
+                      )}
+                    >
+                      <LayoutDashboard className="size-5" />
+                    </Link>
+                  );
+                })()}
                 {(() => {
                   const isAccount = pathname === "/account" || pathname?.startsWith("/account/");
                   return (
@@ -275,6 +306,11 @@ export function Navbar() {
 
             {user ? (
               <>
+                {isAdmin && (
+                  <Link href="/admin" className="px-4 py-3 rounded-xl text-base font-medium hover:bg-rose-50 hover:text-rose-700 transition-colors flex items-center gap-2">
+                    <LayoutDashboard className="size-4" /> ניהול האתר
+                  </Link>
+                )}
                 <Link href="/account" className="px-4 py-3 rounded-xl text-base font-medium hover:bg-rose-50 hover:text-rose-700 transition-colors flex items-center gap-2">
                   <UserCircle2 className="size-4" /> החשבון שלי
                 </Link>

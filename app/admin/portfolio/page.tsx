@@ -13,10 +13,15 @@ export default async function AdminPortfolio() {
         fields={[
           { name: "title", label: "כותרת" },
           { name: "description", label: "תיאור", type: "textarea" },
-          { name: "image_url", label: "תמונה (URL)", required: true },
-          { name: "sort_order", label: "סדר", type: "number" },
+          { name: "image_url", label: "תמונה", type: "image", required: true },
+          { name: "sort_order", label: "סדר", type: "number", step: 1 },
         ]}
-        displayFields={[{ name: "title", label: "כותרת" }, { name: "description", label: "תיאור" }, { name: "sort_order", label: "סדר" }]}
+        displayFields={[
+          { name: "image_url", label: "", type: "image" },
+          { name: "title", label: "כותרת" },
+          { name: "description", label: "תיאור" },
+          { name: "sort_order", label: "סדר" },
+        ]}
       />
     </div>
   );

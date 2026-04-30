@@ -14,12 +14,19 @@ export default async function AdminProducts() {
           { name: "name", label: "שם", required: true },
           { name: "category", label: "קטגוריה" },
           { name: "price", label: "מחיר", type: "number", required: true },
-          { name: "stock", label: "מלאי", type: "number" },
-          { name: "image_url", label: "תמונה (URL)" },
+          { name: "stock", label: "מלאי", type: "number", step: 1 },
+          { name: "image_url", label: "תמונה", type: "image" },
           { name: "description", label: "תיאור", type: "textarea" },
           { name: "active", label: "פעיל", type: "boolean" },
         ]}
-        displayFields={[{ name: "name", label: "שם" }, { name: "category", label: "קטגוריה" }, { name: "price", label: "מחיר" }, { name: "stock", label: "מלאי" }]}
+        displayFields={[
+          { name: "image_url", label: "", type: "image" },
+          { name: "name", label: "שם" },
+          { name: "category", label: "קטגוריה" },
+          { name: "price", label: "מחיר", type: "currency" },
+          { name: "stock", label: "מלאי" },
+          { name: "active", label: "סטטוס", type: "boolean" },
+        ]}
       />
     </div>
   );

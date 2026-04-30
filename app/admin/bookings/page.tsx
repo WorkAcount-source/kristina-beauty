@@ -1,36 +1,66 @@
 import { createClient } from "@/lib/supabase/server";
-import { formatDate, formatTime } from "@/lib/utils";
+import { AdminCrud } from "@/components/admin/admin-crud";
 
 export default async function AdminBookings() {
   const supabase = await createClient();
-  const { data } = await supabase.from("bookings").select("*, services(name)").order("start_at", { ascending: false }).limit(100);
-  type Row = { id: string; start_at: string; status: string; customer_name: string; customer_phone: string; services: { name: string } | null };
-  const rows = (data as Row[]) ?? [];
+  const [{ data: bookings }, { data: services }] = await Promise.all([
+    supabase
+      .from("bookings")
+      .select("*, services(name)")
+      .order("start_at", { ascending: false })
+      .limit(500),
+    supabase.from("services").select("id, name").eq("active", true).order("name"),
+  ]);
+  const serviceOptions = (services ?? []).map((s) => ({
+    value: s.id as string,
+    label: s.name as string,
+  }));
+  const rows = (bookings ?? []).map((b) => ({
+    ...b,
+    service_name: (b.services as { name?: string } | null)?.name ?? "—",
+  }));
   return (
     <div className="space-y-4">
       <h1 className="font-display text-3xl font-bold">תורים</h1>
-      <div className="bg-white rounded-2xl shadow-sm border border-rose-100 overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="bg-rose-50">
-            <tr className="text-right">
-              <th className="p-3">תאריך</th><th className="p-3">שעה</th><th className="p-3">שירות</th>
-              <th className="p-3">לקוחה</th><th className="p-3">טלפון</th><th className="p-3">סטטוס</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r) => (
-              <tr key={r.id} className="border-t hover:bg-rose-50/40">
-                <td className="p-3">{formatDate(r.start_at)}</td>
-                <td className="p-3">{formatTime(r.start_at)}</td>
-                <td className="p-3">{r.services?.name}</td>
-                <td className="p-3">{r.customer_name}</td>
-                <td className="p-3" dir="ltr">{r.customer_phone}</td>
-                <td className="p-3"><span className="px-2 py-1 bg-rose-100 text-rose-700 rounded-full text-xs">{r.status}</span></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <AdminCrud
+        table="bookings"
+        rows={rows}
+        fields={[
+          {
+            name: "service_id",
+            label: "שירות",
+            type: "select",
+            required: true,
+            options: serviceOptions,
+          },
+          { name: "start_at", label: "התחלה", type: "datetime", required: true },
+          { name: "end_at", label: "סיום", type: "datetime", required: true },
+          { name: "customer_name", label: "שם לקוחה", required: true },
+          { name: "customer_phone", label: "טלפון", required: true },
+          { name: "customer_email", label: "אימייל" },
+          {
+            name: "status",
+            label: "סטטוס",
+            type: "select",
+            required: true,
+            options: [
+              { value: "pending", label: "ממתין" },
+              { value: "confirmed", label: "מאושר" },
+              { value: "cancelled", label: "בוטל" },
+              { value: "completed", label: "הושלם" },
+            ],
+          },
+          { name: "notes", label: "הערות", type: "textarea" },
+        ]}
+        searchableFields={["customer_name", "customer_phone", "service_name", "status"]}
+        displayFields={[
+          { name: "start_at", label: "מועד", type: "date" },
+          { name: "service_name", label: "שירות" },
+          { name: "customer_name", label: "לקוחה" },
+          { name: "customer_phone", label: "טלפון" },
+          { name: "status", label: "סטטוס" },
+        ]}
+      />
     </div>
   );
 }
