@@ -16,7 +16,7 @@ export default async function AdminOrders() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="font-display text-3xl font-bold">הזמנות</h1>
+        <h1 className="font-display text-2xl md:text-3xl font-bold">הזמנות</h1>
         <Link
           href="/admin/orders/items"
           className="text-sm text-rose-700 hover:underline"

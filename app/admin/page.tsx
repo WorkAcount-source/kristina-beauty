@@ -115,7 +115,7 @@ export default async function AdminHome() {
 
   return (
     <div className="space-y-6">
-      <h1 className="font-display text-3xl font-bold">סקירה כללית</h1>
+      <h1 className="font-display text-2xl md:text-3xl font-bold">סקירה כללית</h1>
 
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {kpis.map((s) => (

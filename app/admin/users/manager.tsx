@@ -119,7 +119,109 @@ export function UsersManager() {
         </div>
       )}
 
-      <div className="bg-white rounded-2xl shadow-sm border border-rose-100 overflow-x-auto">
+      {/* Mobile cards */}
+      <div className="md:hidden space-y-3">
+        {filtered.map((u) => {
+          const banned = isBanned(u);
+          return (
+            <div
+              key={u.id}
+              className="bg-white rounded-2xl shadow-sm border border-rose-100 p-4 space-y-3"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0 flex-1">
+                  <div className="font-semibold text-sm truncate">
+                    {u.full_name ?? "—"}
+                  </div>
+                  <div className="text-xs text-muted-foreground truncate" dir="ltr">
+                    {u.email ?? "—"}
+                  </div>
+                  {u.phone && (
+                    <div className="text-xs text-muted-foreground" dir="ltr">
+                      {u.phone}
+                    </div>
+                  )}
+                </div>
+                <div className="flex flex-col items-end gap-1 shrink-0">
+                  <span
+                    className={`px-2 py-0.5 rounded-full text-xs ${
+                      u.role === "admin"
+                        ? "bg-rose-100 text-rose-700"
+                        : "bg-neutral-100 text-neutral-700"
+                    }`}
+                  >
+                    {u.role === "admin" ? "מנהל" : "לקוחה"}
+                  </span>
+                  {banned ? (
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-100 text-red-700">
+                      חסום
+                    </span>
+                  ) : u.email_confirmed_at ? (
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700">
+                      פעיל
+                    </span>
+                  ) : (
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-100 text-amber-700">
+                      לא אומת
+                    </span>
+                  )}
+                </div>
+              </div>
+              {u.last_sign_in_at && (
+                <div className="text-[11px] text-muted-foreground">
+                  כניסה אחרונה:{" "}
+                  {new Date(u.last_sign_in_at).toLocaleDateString("he-IL")}
+                </div>
+              )}
+              <div className="flex flex-wrap gap-1 pt-1 border-t border-rose-50">
+                <button
+                  onClick={() =>
+                    patch(u.id, "role", u.role === "admin" ? "customer" : "admin")
+                  }
+                  className="size-9 rounded-lg hover:bg-rose-100 text-rose-700 flex items-center justify-center"
+                  title={u.role === "admin" ? "הסר הרשאות מנהל" : "הפוך למנהל"}
+                >
+                  {u.role === "admin" ? (
+                    <ShieldOff className="size-4" />
+                  ) : (
+                    <Shield className="size-4" />
+                  )}
+                </button>
+                <button
+                  onClick={() => u.email && reset(u.email)}
+                  disabled={!u.email}
+                  className="size-9 rounded-lg hover:bg-amber-100 text-amber-700 flex items-center justify-center disabled:opacity-40"
+                  title="איפוס סיסמה"
+                >
+                  <KeyRound className="size-4" />
+                </button>
+                <button
+                  onClick={() => patch(u.id, "ban", !banned)}
+                  className="size-9 rounded-lg hover:bg-orange-100 text-orange-700 flex items-center justify-center"
+                  title={banned ? "בטל חסימה" : "חסום"}
+                >
+                  <Ban className="size-4" />
+                </button>
+                <button
+                  onClick={() => remove(u.id, u.email)}
+                  className="size-9 rounded-lg hover:bg-destructive/10 text-destructive flex items-center justify-center"
+                  title="מחק"
+                >
+                  <Trash2 className="size-4" />
+                </button>
+              </div>
+            </div>
+          );
+        })}
+        {!loading && filtered.length === 0 && (
+          <div className="bg-white rounded-2xl shadow-sm border border-rose-100 p-8 text-center text-muted-foreground text-sm">
+            אין משתמשים
+          </div>
+        )}
+      </div>
+
+      {/* Desktop table */}
+      <div className="hidden md:block bg-white rounded-2xl shadow-sm border border-rose-100 overflow-x-auto">
         <table className="w-full text-sm text-center">
           <thead className="bg-rose-50">
             <tr>

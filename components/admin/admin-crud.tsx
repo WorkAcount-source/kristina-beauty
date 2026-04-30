@@ -254,7 +254,80 @@ export function AdminCrud({
         </div>
       )}
 
-      <div className="bg-white rounded-2xl shadow-sm border border-rose-100 overflow-x-auto">
+      {/* Mobile card list — visible on <md */}
+      <div className="md:hidden space-y-3">
+        {visible.map((r) => {
+          const imageField = displayFields.find((d) => d.type === "image");
+          const titleField =
+            displayFields.find((d) => d.type !== "image" && d.type !== "boolean") ??
+            displayFields[0];
+          const otherFields = displayFields.filter(
+            (d) => d !== imageField && d !== titleField
+          );
+          return (
+            <div
+              key={r.id}
+              className="bg-white rounded-2xl shadow-sm border border-rose-100 p-4"
+            >
+              <div className="flex items-start gap-3">
+                {imageField && (
+                  <div className="shrink-0">
+                    <CellRenderer field={imageField} value={r[imageField.name]} />
+                  </div>
+                )}
+                <div className="min-w-0 flex-1">
+                  {titleField && (
+                    <div className="font-semibold text-sm break-words">
+                      <CellRenderer
+                        field={{ ...titleField, type: "text" }}
+                        value={r[titleField.name]}
+                      />
+                    </div>
+                  )}
+                </div>
+                <div className="flex gap-1 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => openEdit(r)}
+                    className="size-9 rounded-lg hover:bg-rose-100 text-rose-700 flex items-center justify-center"
+                    aria-label="ערוך"
+                  >
+                    <Pencil className="size-4" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onDelete(r)}
+                    className="size-9 rounded-lg hover:bg-destructive/10 text-destructive flex items-center justify-center"
+                    aria-label="מחק"
+                  >
+                    <Trash2 className="size-4" />
+                  </button>
+                </div>
+              </div>
+              {otherFields.length > 0 && (
+                <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-2 text-xs">
+                  {otherFields.map((d) => (
+                    <div key={d.name} className="min-w-0">
+                      <dt className="text-muted-foreground">{d.label}</dt>
+                      <dd className="font-medium break-words">
+                        <CellRenderer field={d} value={r[d.name]} />
+                      </dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+            </div>
+          );
+        })}
+        {visible.length === 0 && (
+          <div className="bg-white rounded-2xl shadow-sm border border-rose-100 p-8 text-center text-muted-foreground text-sm">
+            אין נתונים להצגה
+          </div>
+        )}
+      </div>
+
+      {/* Desktop table — visible on md+ */}
+      <div className="hidden md:block bg-white rounded-2xl shadow-sm border border-rose-100 overflow-x-auto">
         <table className="w-full text-sm text-center">
           <thead className="bg-rose-50">
             <tr>

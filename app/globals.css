@@ -179,3 +179,11 @@
 ::-webkit-scrollbar-track { background: hsl(var(--cream-deep)); }
 ::-webkit-scrollbar-thumb { background: hsl(var(--rose) / 0.4); border-radius: 5px; }
 ::-webkit-scrollbar-thumb:hover { background: hsl(var(--rose) / 0.7); }
+
+/* ---------- FullCalendar — responsive header on mobile ---------- */
+@media (max-width: 640px) {
+  .fc .fc-toolbar.fc-header-toolbar { flex-wrap: wrap; gap: 0.5rem; }
+  .fc .fc-toolbar-chunk { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+  .fc .fc-toolbar-title { font-size: 1rem !important; }
+  .fc .fc-button { padding: 0.35rem 0.6rem !important; font-size: 0.8rem !important; }
+}

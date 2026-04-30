@@ -28,7 +28,7 @@ export default async function AdminCalendarPage() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
-        <h1 className="font-display text-3xl font-bold">יומן תורים</h1>
+        <h1 className="font-display text-2xl md:text-3xl font-bold">יומן תורים</h1>
         <Link
           href="/admin/bookings"
           className="text-sm text-rose-700 hover:underline"

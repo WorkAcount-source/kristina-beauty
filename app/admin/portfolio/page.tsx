@@ -6,7 +6,7 @@ export default async function AdminPortfolio() {
   const { data } = await supabase.from("portfolio_items").select("*").order("sort_order");
   return (
     <div className="space-y-4">
-      <h1 className="font-display text-3xl font-bold">תיק עבודות</h1>
+      <h1 className="font-display text-2xl md:text-3xl font-bold">תיק עבודות</h1>
       <AdminCrud
         table="portfolio_items"
         rows={data ?? []}

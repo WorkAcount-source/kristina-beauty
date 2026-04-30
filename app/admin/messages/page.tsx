@@ -10,7 +10,7 @@ export default async function AdminMessages() {
     .limit(500);
   return (
     <div className="space-y-4">
-      <h1 className="font-display text-3xl font-bold">הודעות מהאתר</h1>
+      <h1 className="font-display text-2xl md:text-3xl font-bold">הודעות מהאתר</h1>
       <MessagesList rows={data ?? []} />
     </div>
   );

@@ -20,7 +20,7 @@ export default async function AdminEnrollments() {
   }));
   return (
     <div className="space-y-4">
-      <h1 className="font-display text-3xl font-bold">רישומים לקורסים</h1>
+      <h1 className="font-display text-2xl md:text-3xl font-bold">רישומים לקורסים</h1>
       <AdminCrud
         table="enrollments"
         rows={rows}

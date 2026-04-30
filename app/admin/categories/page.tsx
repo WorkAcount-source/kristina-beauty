@@ -9,7 +9,7 @@ export default async function AdminCategories() {
     .order("sort_order");
   return (
     <div className="space-y-4">
-      <h1 className="font-display text-3xl font-bold">קטגוריות שירותים</h1>
+      <h1 className="font-display text-2xl md:text-3xl font-bold">קטגוריות שירותים</h1>
       <AdminCrud
         table="service_categories"
         rows={data ?? []}
