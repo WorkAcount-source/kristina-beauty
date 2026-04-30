@@ -16,8 +16,8 @@ const config: Config = {
     },
     extend: {
       fontFamily: {
-        sans: ["var(--font-heebo)", "system-ui", "sans-serif"],
-        display: ["var(--font-display)", "Fraunces", "serif"],
+        sans: ["var(--font-sans)", "system-ui", "sans-serif"],
+        display: ["var(--font-sans)", "var(--font-display-latin)", "system-ui", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

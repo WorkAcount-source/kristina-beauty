@@ -43,10 +43,8 @@ export function HeroVideo() {
         (e.currentTarget as HTMLVideoElement).playbackRate = 0.6;
       }}
     >
-      <source
-        src="https://videos.pexels.com/video-files/4155519/4155519-uhd_2732_1440_25fps.mp4"
-        type="video/mp4"
-      />
+      <source src="/videos/hero.webm" type="video/webm" />
+      <source src="/videos/hero.mp4" type="video/mp4" />
     </video>
   );
 }

@@ -4,10 +4,15 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import { Providers } from "@/components/providers";
 
-const heebo = Heebo({ subsets: ["hebrew", "latin"], variable: "--font-heebo", display: "swap" });
+const heebo = Heebo({
+  subsets: ["hebrew", "latin"],
+  variable: "--font-sans",
+  display: "swap",
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
+});
 const playfair = Playfair_Display({
   subsets: ["latin"],
-  variable: "--font-display",
+  variable: "--font-display-latin",
   display: "swap",
   weight: ["400", "500", "600", "700", "800", "900"],
   style: ["normal", "italic"],

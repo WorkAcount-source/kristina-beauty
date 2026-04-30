@@ -1,6 +1,5 @@
 import Link from "next/link";
-import { notFound, redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { notFound } from "next/navigation";
 import { createPublicClient } from "@/lib/supabase/public";
 import { formatPrice, formatDuration } from "@/lib/utils";
 import { Clock, ChevronRight } from "lucide-react";
@@ -14,18 +13,12 @@ export async function generateStaticParams() {
   return (data ?? []).map((row) => ({ id: String(row.id) }));
 }
 
+export const revalidate = 3600;
+
 export default async function CoursePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 
-  // Viewing the full details of a course requires authentication.
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) {
-    redirect(`/auth/login?redirect=/courses/${id}`);
-  }
-
-  // Use the public (cookie-less) client for the data fetch — content is the
-  // same for every authenticated user, so the query result can be cached.
+  // Course details are public — only the enrollment action requires auth.
   const pub = createPublicClient();
   const { data } = await pub.from("courses").select("*").eq("id", id).single();
   const course = data as Course | null;

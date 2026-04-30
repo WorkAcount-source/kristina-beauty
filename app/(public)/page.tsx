@@ -73,7 +73,7 @@ async function HomepageSections() {
         <section className="relative py-14 md:py-24 bg-gradient-rose">
           <div className="container">
             <SectionHeader eyebrow="Services" title="השירותים שלנו" subtitle="טיפוח מקצועי לכל אישה - בחרי את השירות המועדף עלייך" />
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-5">
               {services.map((s) => <ServiceCard key={s.id} service={s} />)}
             </div>
           </div>

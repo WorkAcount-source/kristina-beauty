@@ -31,7 +31,7 @@ const csp = [
   `font-src 'self' data: https://fonts.gstatic.com`,
   `connect-src 'self' https://${SUPABASE_HOST} wss://${SUPABASE_HOST} https://api.stripe.com`,
   `frame-src https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com https://www.google.com https://maps.google.com`,
-  `media-src 'self' blob: https://res.cloudinary.com https://videos.pexels.com https://*.pexels.com`,
+  `media-src 'self' blob: https://res.cloudinary.com`,
   `worker-src 'self' blob:`,
   `manifest-src 'self'`,
   `upgrade-insecure-requests`,

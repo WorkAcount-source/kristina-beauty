@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Star, ArrowLeft, Sparkles } from "lucide-react";
+import { Star, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { HeroVideo } from "@/components/sections/hero-video";
 
@@ -28,12 +28,6 @@ export function Hero() {
       <div className="relative container grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
         {/* Text — RIGHT side in RTL */}
         <div className="text-center lg:text-right space-y-6 lg:order-1 text-white motion-safe:animate-[heroFadeUp_600ms_cubic-bezier(0.16,1,0.3,1)_both]">
-          <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[11px] font-medium tracking-[0.18em] uppercase">
-            <span className="size-1.5 rounded-full bg-rose-400 animate-pulse" />
-            Studio · Kibbutz Ginegar
-            <Sparkles className="size-3.5 text-rose-300" />
-          </div>
-
           <h1 className="font-display font-semibold text-[2.6rem] sm:text-5xl md:text-6xl lg:text-[4.75rem] xl:text-[5.5rem] leading-[1.02] tracking-tight">
             <span className="block drop-shadow-2xl">Kristina</span>
             <span className="block text-white/90">
@@ -80,7 +74,7 @@ export function Hero() {
             </div>
             <div className="h-7 w-px bg-white/25" />
             <div className="flex items-baseline gap-2">
-              <span className="font-sans text-3xl text-rose-300 font-bold">+1000</span>
+              <span className="font-sans text-3xl text-rose-300 font-bold">+300</span>
               <span className="text-xs text-white/70 tracking-wider uppercase">לקוחות</span>
             </div>
             <div className="h-7 w-px bg-white/25" />

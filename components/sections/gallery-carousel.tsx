@@ -26,13 +26,13 @@ export function GalleryCarousel({ items }: { items: PortfolioItem[] }) {
       <div className="overflow-hidden rounded-[2rem]" ref={emblaRef}>
         <div className="flex">
           {items.map((it) => (
-            <div key={it.id} className="flex-[0_0_85%] md:flex-[0_0_55%] lg:flex-[0_0_45%] min-w-0 px-3">
-              <div className="relative aspect-[3/4] rounded-[2rem] overflow-hidden shadow-[0_34px_80px_-45px_rgba(0,0,0,0.75)] group lift">
-                <SafeImage src={it.image_url} alt={it.title || ""} fill className="object-cover transition-transform duration-700 group-hover:scale-110" sizes="(max-width:768px) 85vw, 50vw" />
+            <div key={it.id} className="flex-[0_0_60%] sm:flex-[0_0_45%] md:flex-[0_0_32%] lg:flex-[0_0_25%] min-w-0 px-2">
+              <div className="relative aspect-square rounded-[1.5rem] overflow-hidden shadow-[0_30px_70px_-48px_rgba(0,0,0,0.85)] ring-1 ring-white/10 group lift">
+                <SafeImage src={it.image_url} alt={it.title || ""} fill className="object-cover transition-transform duration-700 group-hover:scale-110" sizes="(max-width:768px) 60vw, 25vw" />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/76 via-black/18 to-transparent" />
-                <div className="absolute bottom-0 inset-x-0 p-6 text-white">
-                  <h3 className="font-display text-2xl md:text-3xl mb-2">{it.title}</h3>
-                  {it.description && <p className="text-sm text-white/90">{it.description}</p>}
+                <div className="absolute bottom-0 inset-x-0 p-4 text-white">
+                  <h3 className="font-display text-lg md:text-xl mb-1">{it.title}</h3>
+                  {it.description && <p className="text-xs text-white/85 line-clamp-2">{it.description}</p>}
                 </div>
               </div>
             </div>
