@@ -57,12 +57,31 @@ export const useCart = create<CartState>()(
 import { useEffect, useState } from "react";
 
 export function useCartHydrated(): boolean {
-  const [hydrated, setHydrated] = useState(() => useCart.persist.hasHydrated());
+  // Important: during static prerender (SSG) and on the very first client
+  // render before effects run, we must report `false`. Reading
+  // `useCart.persist.hasHydrated()` directly in the `useState` initializer
+  // crashes on the server because the persist middleware API isn't fully
+  // initialized in that environment ("Cannot read properties of undefined
+  // (reading 'hasHydrated')"). We start with `false` and flip it inside
+  // `useEffect`, which only runs on the client.
+  const [hydrated, setHydrated] = useState(false);
   useEffect(() => {
-    if (hydrated) return;
-    const unsub = useCart.persist.onFinishHydration(() => setHydrated(true));
-    setHydrated(useCart.persist.hasHydrated());
+    const persist = useCart.persist;
+    if (!persist) {
+      // No persist middleware in this environment — treat as hydrated so the
+      // UI doesn't get stuck on the skeleton.
+      setHydrated(true);
+      return;
+    }
+    if (persist.hasHydrated()) {
+      setHydrated(true);
+      return;
+    }
+    const unsub = persist.onFinishHydration(() => setHydrated(true));
+    // Re-check after subscribing in case hydration finished between the
+    // initial check and the subscription being attached.
+    if (persist.hasHydrated()) setHydrated(true);
     return () => unsub();
-  }, [hydrated]);
+  }, []);
   return hydrated;
 }

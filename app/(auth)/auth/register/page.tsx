@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -56,10 +56,21 @@ export default function RegisterPage() {
         <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-rose-100" /></div>
         <div className="relative flex justify-center text-xs uppercase"><span className="bg-white px-3 text-muted-foreground">או</span></div>
       </div>
-      <GoogleSignInButton />
+      <GoogleSignInButtonSuspense />
       <p className="text-center text-sm mt-6 text-muted-foreground">
         כבר יש לך חשבון? <Link href="/auth/login" className="text-rose-600 font-medium hover:underline">התחברי כאן</Link>
       </p>
     </div>
+  );
+}
+
+// `GoogleSignInButton` calls `useSearchParams()`, which requires a Suspense
+// boundary at static-export time. Wrapping it locally keeps the rest of the
+// register page statically prerenderable.
+function GoogleSignInButtonSuspense() {
+  return (
+    <Suspense fallback={<div className="h-11 rounded-md bg-rose-50 animate-pulse" />}>
+      <GoogleSignInButton />
+    </Suspense>
   );
 }
