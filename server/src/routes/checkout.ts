@@ -112,34 +112,41 @@ router.post("/", requireAuth, async (req, res) => {
       throw iErr;
     }
 
-    const clientUrl = process.env.CLIENT_URL || "http://localhost:3000";
-    const session = await stripe.checkout.sessions.create({
-      mode: "payment",
-      currency: "ils",
-      customer_email: body.customer.email,
-      line_items: lineItems.map((l) => ({
-        price_data: {
-          currency: "ils",
-          product_data: {
-            name: l.product.name,
-            images: l.product.image_url ? [l.product.image_url] : [],
+    if (stripe) {
+      const clientUrl = process.env.CLIENT_URL || "http://localhost:3000";
+      const session = await stripe.checkout.sessions.create({
+        mode: "payment",
+        currency: "ils",
+        customer_email: body.customer.email,
+        line_items: lineItems.map((l) => ({
+          price_data: {
+            currency: "ils",
+            product_data: {
+              name: l.product.name,
+              images: l.product.image_url ? [l.product.image_url] : [],
+            },
+            unit_amount: Math.round(Number(l.product.price) * 100),
           },
-          unit_amount: Math.round(Number(l.product.price) * 100),
-        },
-        quantity: l.qty,
-      })),
-      success_url: `${clientUrl}/account?tab=orders&success=true`,
-      cancel_url: `${clientUrl}/cart`,
-      client_reference_id: req.user!.id,
-      metadata: { order_id: order.id, user_id: req.user!.id },
-    });
+          quantity: l.qty,
+        })),
+        success_url: `${clientUrl}/account?tab=orders&success=true`,
+        cancel_url: `${clientUrl}/cart`,
+        client_reference_id: req.user!.id,
+        metadata: { order_id: order.id, user_id: req.user!.id },
+      });
 
-    await admin
-      .from("orders")
-      .update({ payment_intent_id: session.id })
-      .eq("id", order.id);
+      await admin
+        .from("orders")
+        .update({ payment_intent_id: session.id })
+        .eq("id", order.id);
 
-    res.json({ url: session.url, orderId: order.id });
+      res.json({ url: session.url, orderId: order.id });
+      return;
+    }
+
+    // Mock confirm — Stripe not configured (dev mode)
+    await admin.from("orders").update({ status: "paid" }).eq("id", order.id);
+    res.json({ orderId: order.id });
   } catch (err) {
     console.error("[POST /api/checkout]", err);
     res.status(500).json({ error: "שגיאה בעיבוד התשלום" });

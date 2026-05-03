@@ -8,7 +8,7 @@ const router = Router();
 // express.raw() captures the body as a Buffer — required for Stripe signature verification.
 // This router is mounted BEFORE express.json() in index.ts so the stream is still intact.
 router.post("/webhook", raw({ type: "application/json" }), async (req, res) => {
-  if (!process.env.STRIPE_WEBHOOK_SECRET) {
+  if (!stripe || !process.env.STRIPE_WEBHOOK_SECRET) {
     res.status(500).json({ error: "Stripe not configured" });
     return;
   }
