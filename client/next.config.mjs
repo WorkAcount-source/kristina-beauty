@@ -29,7 +29,7 @@ const csp = [
   `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com`,
   `img-src 'self' data: blob: https://res.cloudinary.com https://images.unsplash.com https://picsum.photos https://fastly.picsum.photos https://*.supabase.co https://*.supabase.in`,
   `font-src 'self' data: https://fonts.gstatic.com`,
-  `connect-src 'self' https://${SUPABASE_HOST} wss://${SUPABASE_HOST} https://api.stripe.com`,
+  `connect-src 'self' https://${SUPABASE_HOST} wss://${SUPABASE_HOST} https://api.stripe.com${process.env.NEXT_PUBLIC_API_URL ? ` ${process.env.NEXT_PUBLIC_API_URL}` : ""}`,
   `frame-src https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com https://www.google.com https://maps.google.com`,
   `media-src 'self' blob: https://res.cloudinary.com`,
   `worker-src 'self' blob:`,

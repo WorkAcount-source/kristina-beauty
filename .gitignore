@@ -1,11 +1,30 @@
-node_modules
-.next
-out
-.env*.local
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Build outputs
+client/.next/
+client/out/
+server/dist/
+
+# Environment files — never commit
 .env
-.DS_Store
-*.tsbuildinfo
-next-env.d.ts
-.vercel
+.env.local
+client/.env.local
+client/.env*.local
+server/.env
+
+# Supabase
 supabase/.branches
-supabase/.temp
+supabase/.temp/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.tsbuildinfo
+.idea/
+
+# Vercel / Next.js
+client/.vercel/
+client/next-env.d.ts

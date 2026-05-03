@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Search, Shield, ShieldOff, KeyRound, Ban, Trash2, Loader2 } from "lucide-react";
+import { apiFetch } from "@/lib/api";
 
 interface UserRow {
   id: string;
@@ -26,7 +27,7 @@ export function UsersManager() {
   async function load() {
     setLoading(true);
     try {
-      const res = await fetch("/api/admin/users", { cache: "no-store" });
+      const res = await apiFetch("/api/admin/users", { cache: "no-store" });
       if (!res.ok) throw new Error((await res.json()).error || "שגיאה");
       const j = await res.json();
       setUsers(j.users);
@@ -54,9 +55,8 @@ export function UsersManager() {
   }, [users, query]);
 
   async function patch(id: string, action: "role" | "ban", value: string | boolean) {
-    const res = await fetch("/api/admin/users", {
+    const res = await apiFetch("/api/admin/users", {
       method: "PATCH",
-      headers: { "content-type": "application/json" },
       body: JSON.stringify({ id, action, value }),
     });
     const j = await res.json().catch(() => ({}));
@@ -66,9 +66,8 @@ export function UsersManager() {
   }
 
   async function reset(email: string) {
-    const res = await fetch("/api/admin/users", {
+    const res = await apiFetch("/api/admin/users", {
       method: "POST",
-      headers: { "content-type": "application/json" },
       body: JSON.stringify({ action: "reset", email }),
     });
     const j = await res.json().catch(() => ({}));
@@ -87,7 +86,7 @@ export function UsersManager() {
 
   async function remove(id: string, email: string | null) {
     if (!confirm(`למחוק לצמיתות את ${email ?? id}?`)) return;
-    const res = await fetch(`/api/admin/users?id=${encodeURIComponent(id)}`, {
+    const res = await apiFetch(`/api/admin/users?id=${encodeURIComponent(id)}`, {
       method: "DELETE",
     });
     const j = await res.json().catch(() => ({}));

@@ -8,6 +8,7 @@ import { Input, Label, Textarea } from "@/components/ui/input";
 import { formatPrice } from "@/lib/utils";
 import { toast } from "sonner";
 import { CreditCard, Lock } from "lucide-react";
+import { apiFetch } from "@/lib/api";
 
 export function CheckoutForm({ defaultName, defaultEmail, defaultPhone }: {
   defaultName?: string; defaultEmail?: string; defaultPhone?: string;
@@ -29,9 +30,8 @@ export function CheckoutForm({ defaultName, defaultEmail, defaultPhone }: {
     setLoading(true);
     const fd = new FormData(e.currentTarget);
     try {
-      const res = await fetch("/api/checkout", {
+      const res = await apiFetch("/api/checkout", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           items: items.map((i) => ({ id: i.id, qty: i.qty })),
           customer: {
