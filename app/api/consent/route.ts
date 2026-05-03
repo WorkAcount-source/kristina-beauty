@@ -4,7 +4,7 @@ import { createClient, createServiceClient } from "@/lib/supabase/server";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export const POLICY_VERSION = "v1.0";
+const POLICY_VERSION = "v1.0";
 
 type ConsentType = "terms" | "privacy" | "marketing" | "accessibility";
 
