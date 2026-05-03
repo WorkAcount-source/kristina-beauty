@@ -6,7 +6,9 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "db:push": "supabase db push --project-dir ./supabase",
+    "db:reset": "supabase db reset --project-dir ./supabase"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.46.1",

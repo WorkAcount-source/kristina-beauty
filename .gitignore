@@ -16,8 +16,8 @@ client/.env*.local
 server/.env
 
 # Supabase
-supabase/.branches
-supabase/.temp/
+server/supabase/.branches
+server/supabase/.temp/
 
 # OS / editor
 .DS_Store
