@@ -1,8 +1,13 @@
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import { ChevronRight } from "lucide-react";
-import { createClient } from "@/lib/supabase/server";
-import { AdminCrud } from "@/components/admin/admin-crud";
+import { redirect } from "next/navigation";
+
+export default async function AdminChaptersPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  redirect(`/admin/courses/${id}`);
+}
 
 export default async function AdminChaptersPage({
   params,

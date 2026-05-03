@@ -1,6 +1,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { AdminCrud } from "@/components/admin/admin-crud";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminCourses() {
   const supabase = await createClient();
   const { data } = await supabase.from("courses").select("*").order("created_at", { ascending: false });
@@ -10,7 +12,7 @@ export default async function AdminCourses() {
       <AdminCrud
         table="courses"
         rows={data ?? []}
-        rowLink={{ href: "/admin/courses/{id}/chapters", label: "פרקים" }}
+        rowLink={{ href: "/admin/courses/{id}", label: "עריכה מלאה" }}
         fields={[
           { name: "title", label: "כותרת", required: true },
           { name: "duration_min", label: "משך (דקות)", type: "number", required: true, step: 1 },
