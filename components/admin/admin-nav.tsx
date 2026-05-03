@@ -119,8 +119,8 @@ export function AdminNav({ sections }: { sections: AdminNavSection[] }) {
   return (
     <>
       {/* Mobile top bar — only on <lg */}
-      <div className="lg:hidden -mx-4 mb-3 sticky top-20 z-30 bg-rose-50/80 backdrop-blur supports-[backdrop-filter]:bg-rose-50/60 border-b border-rose-100">
-        <div className="flex items-center gap-2 px-4 py-2.5">
+      <div className="lg:hidden mb-3 sticky top-20 z-30 bg-rose-50/80 backdrop-blur supports-[backdrop-filter]:bg-rose-50/60 border-b border-rose-100 rounded-xl">
+        <div className="flex items-center gap-2 px-3 py-2.5">
           <button
             type="button"
             onClick={() => setOpen(true)}

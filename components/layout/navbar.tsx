@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Menu, X, ShoppingBag, Sparkles, LogIn, LogOut, UserPlus, UserCircle2, LayoutDashboard } from "lucide-react";
+import { Menu, X, ShoppingBag, LogIn, LogOut, UserPlus, UserCircle2, LayoutDashboard } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useCart, useCartHydrated } from "@/lib/store/cart";
 import { createClient } from "@/lib/supabase/client";
@@ -95,12 +96,26 @@ export function Navbar() {
           />
         )}
         <div className="relative container flex h-16 md:h-20 items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-2 group">
-            <Sparkles className="size-6 md:size-7 text-rose-500" strokeWidth={2.2} />
-            <div className="flex flex-col leading-none">
-              <span className={cn("font-display text-xl md:text-2xl font-bold transition-colors duration-300", solid ? "text-neutral-900" : "text-white")}>Kristina</span>
-              <span className={cn("text-[9px] md:text-[10px] tracking-[0.25em] uppercase transition-colors duration-300", solid ? "text-rose-600/80" : "text-rose-200")}>Place of Beauty</span>
-            </div>
+          <Link href="/" className="flex items-center group" aria-label="Kristina Place Of Beauty - דף הבית">
+            {solid ? (
+              <Image
+                src="/images/logo.png"
+                alt="Kristina Place Of Beauty"
+                width={120}
+                height={120}
+                className="logo-navbar h-12 md:h-14 w-auto object-contain mix-blend-multiply"
+                priority
+              />
+            ) : (
+              <Image
+                src="/images/logo2.png"
+                alt="Kristina Place Of Beauty"
+                width={120}
+                height={120}
+                className="logo-navbar h-12 md:h-14 w-auto object-contain"
+                priority
+              />
+            )}
           </Link>
 
           <nav className="hidden lg:flex items-center gap-1">

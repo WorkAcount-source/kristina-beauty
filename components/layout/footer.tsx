@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { Sparkles, Instagram, Phone, MapPin, Mail, Clock } from "lucide-react";
+import Image from "next/image";
+import { Instagram, Phone, MapPin, Mail, Clock } from "lucide-react";
 import { whatsappLink } from "@/lib/utils";
 
 const HOURS = [
@@ -13,12 +14,14 @@ export function Footer() {
     <footer className="bg-gradient-to-b from-rose-50 to-rose-100 border-t border-rose-200 mt-20">
       <div className="container py-14 md:py-16 grid gap-10 md:grid-cols-2 lg:grid-cols-4">
         <div className="space-y-4">
-          <Link href="/" className="flex items-center gap-2">
-            <Sparkles className="size-7 text-rose-600" strokeWidth={2.2} />
-            <div className="flex flex-col leading-none">
-              <span className="font-display text-2xl text-gradient">Kristina</span>
-              <span className="text-[10px] tracking-[0.25em] text-rose-700/70 uppercase">Place of Beauty</span>
-            </div>
+          <Link href="/" aria-label="Kristina Place Of Beauty - דף הבית">
+            <Image
+              src="/images/logo.png"
+              alt="Kristina Place Of Beauty"
+              width={160}
+              height={70}
+              className="h-16 w-auto object-contain mix-blend-multiply"
+            />
           </Link>
           <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">המקום שלך ליופי מקצועי</p>
           <div className="flex gap-3">

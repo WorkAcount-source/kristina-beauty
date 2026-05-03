@@ -191,19 +191,19 @@ export default async function AdminHome() {
             ) : (
               <ul className="space-y-2">
                 {(recentAudit.data ?? []).map((a) => (
-                  <li key={a.id as number} className="flex justify-between text-xs gap-3">
-                    <span className="truncate">
+                  <li key={a.id as number} className="flex flex-col xs:flex-row justify-between text-xs gap-1 xs:gap-3 py-0.5">
+                    <span className="truncate min-w-0">
                       <span className="font-mono text-muted-foreground">
                         {String(a.action)}
                       </span>{" "}
                       <span className="font-semibold">{String(a.table_name)}</span>{" "}
                       {a.actor_email && (
-                        <span className="text-muted-foreground" dir="ltr">
+                        <span className="text-muted-foreground truncate" dir="ltr">
                           ({String(a.actor_email)})
                         </span>
                       )}
                     </span>
-                    <span className="text-muted-foreground whitespace-nowrap">
+                    <span className="text-muted-foreground shrink-0">
                       {new Date(a.created_at as string).toLocaleString("he-IL", {
                         month: "short",
                         day: "numeric",

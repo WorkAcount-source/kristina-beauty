@@ -3,6 +3,7 @@ import { Heebo, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { Providers } from "@/components/providers";
+import { AccessibilityWidget } from "@/components/accessibility/accessibility-widget";
 
 const heebo = Heebo({
   subsets: ["hebrew", "latin"],
@@ -22,6 +23,10 @@ export const metadata: Metadata = {
   title: { default: "Kristina Place Of Beauty", template: "%s | Kristina Place Of Beauty" },
   description: "סטודיו יופי מקצועי - מניקור, פדיקור, עיצוב ציפורניים, גבות וקורסים מקצועיים. קיבוץ גניגר.",
   keywords: ["מניקור", "פדיקור", "ציפורניים", "גבות", "קורסים", "יופי", "קיבוץ גניגר"],
+  icons: {
+    icon: "/images/logo.png",
+    apple: "/images/logo.png",
+  },
   openGraph: {
     title: "Kristina Place Of Beauty",
     description: "המקום שלך ליופי מקצועי",
@@ -37,6 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Providers>
           {children}
           <Toaster position="top-center" richColors closeButton dir="rtl" />
+          <AccessibilityWidget />
         </Providers>
       </body>
     </html>

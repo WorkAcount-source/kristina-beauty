@@ -7,18 +7,43 @@ import { createClient } from "@/lib/supabase/client";
 import { toast } from "sonner";
 import { safeRedirect } from "@/lib/safe-redirect";
 
-export function GoogleSignInButton() {
+export interface GoogleSignInButtonProps {
+  /** When true, terms/privacy must be accepted before initiating OAuth. */
+  requireConsent?: boolean;
+  consentAccepted?: boolean;
+  marketingConsent?: boolean;
+  onConsentMissing?: () => void;
+}
+
+export function GoogleSignInButton({
+  requireConsent = false,
+  consentAccepted = false,
+  marketingConsent = false,
+  onConsentMissing,
+}: GoogleSignInButtonProps = {}) {
   const [loading, setLoading] = useState(false);
   const sp = useSearchParams();
   const redirect = safeRedirect(sp.get("redirect"), "/account");
 
   async function onClick() {
+    if (requireConsent && !consentAccepted) {
+      onConsentMissing?.();
+      return;
+    }
     setLoading(true);
     const supabase = createClient();
+
+    // Pass consent flags to the callback so it can persist a consent log entry.
+    const cbParams = new URLSearchParams({ next: redirect });
+    if (requireConsent) {
+      cbParams.set("consent", "1");
+      cbParams.set("marketing", marketingConsent ? "1" : "0");
+    }
+
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(redirect)}`,
+        redirectTo: `${window.location.origin}/auth/callback?${cbParams.toString()}`,
       },
     });
     if (error) {
@@ -35,6 +60,7 @@ export function GoogleSignInButton() {
       className="w-full"
       onClick={onClick}
       disabled={loading}
+      aria-label="המשך עם חשבון Google"
     >
       <svg className="size-5" viewBox="0 0 24 24" aria-hidden="true">
         <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />

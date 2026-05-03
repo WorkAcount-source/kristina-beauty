@@ -65,10 +65,10 @@ export default async function AdminLayout({
   return (
     <>
       <Navbar />
-      <div className="min-h-screen pt-20 lg:pt-24 bg-rose-50/30">
+      <div className="min-h-screen pt-20 lg:pt-24 bg-rose-50/30 overflow-x-hidden">
         <div className="container grid lg:grid-cols-[240px_1fr] gap-4 lg:gap-8 py-4 lg:py-8">
           <AdminNav sections={sections} />
-          <main className="min-w-0">{children}</main>
+          <main className="min-w-0 overflow-x-hidden">{children}</main>
         </div>
       </div>
     </>
