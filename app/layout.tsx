@@ -23,10 +23,6 @@ export const metadata: Metadata = {
   title: { default: "Kristina Place Of Beauty", template: "%s | Kristina Place Of Beauty" },
   description: "סטודיו יופי מקצועי - מניקור, פדיקור, עיצוב ציפורניים, גבות וקורסים מקצועיים. קיבוץ גניגר.",
   keywords: ["מניקור", "פדיקור", "ציפורניים", "גבות", "קורסים", "יופי", "קיבוץ גניגר"],
-  icons: {
-    icon: "/images/logo.png",
-    apple: "/images/logo.png",
-  },
   openGraph: {
     title: "Kristina Place Of Beauty",
     description: "המקום שלך ליופי מקצועי",
@@ -37,7 +33,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="he" dir="rtl" suppressHydrationWarning>
+    <html lang="he" dir="rtl" suppressHydrationWarning data-scroll-behavior="smooth">
       <body className={`${heebo.variable} ${playfair.variable} font-sans`}>
         <Providers>
           {children}

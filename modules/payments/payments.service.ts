@@ -7,6 +7,11 @@ import {
   updateOrderPaymentIntent,
   setOrderStatus,
   setOrderStatusConditional,
+  fetchCourse,
+  fetchEnrollment,
+  upsertEnrollmentPending,
+  activateEnrollmentBySession,
+  setEnrollmentStripeSession,
 } from "./payments.repository";
 import { ValidationError, ConflictError } from "@/lib/utils/errors";
 import type { CheckoutInput } from "./payments.schema";
@@ -101,8 +106,13 @@ export async function handleStripeEvent(event: Stripe.Event): Promise<void> {
   switch (event.type) {
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
+      // Product order
       const orderId = session.metadata?.order_id;
       if (orderId) await setOrderStatusConditional(orderId, "paid", "pending");
+      // Course purchase
+      if (session.metadata?.type === "course") {
+        await activateEnrollmentBySession(session.id);
+      }
       break;
     }
     case "checkout.session.async_payment_failed":
@@ -120,4 +130,51 @@ export async function handleStripeEvent(event: Stripe.Event): Promise<void> {
     }
     // All other events are acknowledged but no-op.
   }
+}
+
+export async function createCourseCheckoutSession(
+  courseId: string,
+  userId: string
+): Promise<{ url?: string | null; enrolled?: boolean }> {
+  const course = await fetchCourse(courseId);
+  if (!course) throw new ValidationError("הקורס לא נמצא");
+
+  // Check if already enrolled and active
+  const existing = await fetchEnrollment(userId, courseId);
+  if (existing?.status === "active") {
+    return { enrolled: true };
+  }
+
+  const enrollment = await upsertEnrollmentPending(userId, courseId);
+
+  if (stripe) {
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+    const session = await stripe.checkout.sessions.create({
+      mode: "payment",
+      currency: "ils",
+      line_items: [
+        {
+          price_data: {
+            currency: "ils",
+            product_data: {
+              name: course.title,
+              images: course.image_url ? [course.image_url] : [],
+            },
+            unit_amount: Math.round(Number(course.price) * 100),
+          },
+          quantity: 1,
+        },
+      ],
+      success_url: `${siteUrl}/courses/${courseId}?purchased=true`,
+      cancel_url: `${siteUrl}/courses/${courseId}`,
+      client_reference_id: userId,
+      metadata: { type: "course", course_id: courseId, user_id: userId },
+    });
+    await setEnrollmentStripeSession(enrollment.id, session.id);
+    return { url: session.url };
+  }
+
+  // Dev fallback — activate immediately without Stripe
+  await activateEnrollmentBySession("");
+  return { enrolled: true };
 }

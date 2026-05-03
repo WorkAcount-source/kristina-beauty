@@ -1,5 +1,5 @@
 import { createClient, createServiceClient } from "@/lib/db";
-import type { Product } from "@/types/db";
+import type { Product, Course } from "@/types/db";
 
 export async function fetchActiveProducts(ids: string[]): Promise<Product[]> {
   const supabase = await createClient();
@@ -72,3 +72,61 @@ export async function setOrderStatusConditional(
     .eq("status", expectedStatus);
   if (error) throw error;
 }
+
+// ---- Course helpers ---------------------------------------------------------
+
+export async function fetchCourse(courseId: string): Promise<Course | null> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("courses")
+    .select("*")
+    .eq("id", courseId)
+    .eq("active", true)
+    .single();
+  return (data as Course) ?? null;
+}
+
+export async function fetchEnrollment(userId: string, courseId: string) {
+  const admin = await createServiceClient();
+  const { data } = await admin
+    .from("enrollments")
+    .select("id, status")
+    .eq("user_id", userId)
+    .eq("course_id", courseId)
+    .maybeSingle();
+  return data as { id: string; status: string } | null;
+}
+
+export async function upsertEnrollmentPending(userId: string, courseId: string) {
+  const admin = await createServiceClient();
+  const { data, error } = await admin
+    .from("enrollments")
+    .upsert(
+      { user_id: userId, course_id: courseId, status: "pending" },
+      { onConflict: "user_id,course_id", ignoreDuplicates: false }
+    )
+    .select("id")
+    .single();
+  if (error) throw error;
+  return data as { id: string };
+}
+
+export async function activateEnrollmentBySession(stripeSessionId: string) {
+  const admin = await createServiceClient();
+  const { error } = await admin
+    .from("enrollments")
+    .update({ status: "active", paid_at: new Date().toISOString() })
+    .eq("stripe_session_id", stripeSessionId)
+    .eq("status", "pending");
+  if (error) throw error;
+}
+
+export async function setEnrollmentStripeSession(enrollmentId: string, sessionId: string) {
+  const admin = await createServiceClient();
+  const { error } = await admin
+    .from("enrollments")
+    .update({ stripe_session_id: sessionId })
+    .eq("id", enrollmentId);
+  if (error) throw error;
+}
+

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe/client";
 import { checkoutSchema } from "./payments.schema";
-import { createCheckoutSession, handleStripeEvent } from "./payments.service";
+import { createCheckoutSession, handleStripeEvent, createCourseCheckoutSession } from "./payments.service";
 import { requireAuth } from "@/middleware/auth";
 import { ok, handleError } from "@/lib/utils/response";
 import type Stripe from "stripe";
@@ -18,6 +18,20 @@ export async function handleCheckout(req: Request): Promise<NextResponse> {
     return ok(result);
   } catch (err) {
     return handleError(err, "/api/checkout");
+  }
+}
+
+export async function handleCourseCheckout(req: Request): Promise<NextResponse> {
+  try {
+    const user = await requireAuth();
+    const { course_id } = await req.json();
+    if (!course_id || typeof course_id !== "string") {
+      return NextResponse.json({ error: "course_id חסר" }, { status: 400 });
+    }
+    const result = await createCourseCheckoutSession(course_id, user.id);
+    return ok(result);
+  } catch (err) {
+    return handleError(err, "/api/checkout/course");
   }
 }
 

@@ -10,6 +10,7 @@ export default async function AdminCourses() {
       <AdminCrud
         table="courses"
         rows={data ?? []}
+        rowLink={{ href: "/admin/courses/{id}/chapters", label: "פרקים" }}
         fields={[
           { name: "title", label: "כותרת", required: true },
           { name: "duration_min", label: "משך (דקות)", type: "number", required: true, step: 1 },

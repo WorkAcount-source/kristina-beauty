@@ -2,8 +2,8 @@ export const metadata = { title: "הצהרת נגישות" };
 
 export default function AccessibilityPage() {
   return (
-    <div className="pt-32 pb-20">
-      <article className="container max-w-3xl prose prose-rose">
+    <div className="pt-24 md:pt-32 pb-12 md:pb-20 overflow-x-hidden">
+      <article className="container max-w-3xl prose prose-rose px-4 sm:px-6 [overflow-wrap:break-word] [word-break:break-word]">
         <h1 className="font-display text-4xl font-bold mb-6">הצהרת נגישות</h1>
         <p className="text-sm text-muted-foreground mb-6">
           עדכון אחרון: מאי 2026 · גרסה 1.0

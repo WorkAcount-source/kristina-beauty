@@ -30,7 +30,7 @@ const csp = [
   `img-src 'self' data: blob: https://res.cloudinary.com https://images.unsplash.com https://picsum.photos https://fastly.picsum.photos https://*.supabase.co https://*.supabase.in`,
   `font-src 'self' data: https://fonts.gstatic.com`,
   `connect-src 'self' https://${SUPABASE_HOST} wss://${SUPABASE_HOST} https://api.stripe.com`,
-  `frame-src https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com https://www.google.com https://maps.google.com`,
+  `frame-src https://js.stripe.com https://hooks.stripe.com https://checkout.stripe.com https://www.google.com https://maps.google.com https://www.youtube.com https://www.youtube-nocookie.com https://player.vimeo.com`,
   `media-src 'self' blob: https://res.cloudinary.com`,
   `worker-src 'self' blob:`,
   `manifest-src 'self'`,

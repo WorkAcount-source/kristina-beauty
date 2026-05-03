@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input, Label, Textarea } from "@/components/ui/input";
 import { createClient } from "@/lib/supabase/client";
@@ -58,16 +59,17 @@ export function AdminCrud({
   pageSize = 20,
   searchableFields,
   uploadFolder,
+  rowLink,
 }: {
   table: string;
   rows: AdminCrudRow[];
   fields: FieldDef[];
   displayFields: DisplayField[];
   pageSize?: number;
-  /** Field names searched by the search box. Defaults to text-ish display fields. */
   searchableFields?: string[];
-  /** Folder name used inside the storage bucket. Defaults to the table name. */
   uploadFolder?: string;
+  /** Optional link per row. Use `{id}` as placeholder for the row id. e.g. "/admin/courses/{id}/chapters" */
+  rowLink?: { href: string; label: string };
 }) {
   const [editing, setEditing] = useState<AdminCrudRow | null>(null);
   const [creating, setCreating] = useState(false);
@@ -286,6 +288,15 @@ export function AdminCrud({
                   )}
                 </div>
                 <div className="flex gap-1 shrink-0">
+                  {rowLink && (
+                    <Link
+                      href={rowLink.href.replace("{id}", r.id)}
+                      className="size-9 rounded-lg hover:bg-rose-100 text-rose-600 flex items-center justify-center text-xs font-medium px-2"
+                      title={rowLink.label}
+                    >
+                      {rowLink.label}
+                    </Link>
+                  )}
                   <button
                     type="button"
                     onClick={() => openEdit(r)}
@@ -349,6 +360,15 @@ export function AdminCrud({
                 ))}
                 <td className="p-3">
                   <div className="flex gap-1 justify-center">
+                    {rowLink && (
+                      <Link
+                        href={rowLink.href.replace("{id}", r.id)}
+                        className="h-8 rounded-lg hover:bg-rose-100 text-rose-600 flex items-center justify-center px-2 text-xs font-medium"
+                        title={rowLink.label}
+                      >
+                        {rowLink.label}
+                      </Link>
+                    )}
                     <button
                       type="button"
                       onClick={() => openEdit(r)}

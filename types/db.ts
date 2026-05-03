@@ -40,7 +40,20 @@ export interface Course {
   duration_min: number;
   price: number;
   image_url: string | null;
+  video_url: string | null;
   active: boolean;
+  created_at: string;
+}
+
+export interface CourseChapter {
+  id: string;
+  course_id: string;
+  title: string;
+  description: string | null;
+  video_url: string | null;
+  duration_min: number | null;
+  sort_order: number;
+  is_free: boolean;
   created_at: string;
 }
 
